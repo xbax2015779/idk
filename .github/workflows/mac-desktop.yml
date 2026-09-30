@@ -1,25 +1,8 @@
-name: Free Visual macOS Desktop
+name: Free No-Card macOS Cloud
 on: workflow_dispatch
 jobs:
-  build:
+  launch-mac:
     runs-on: macos-latest
     steps:
-      - name: Install Ngrok and VNC dependencies
-        run: |
-          brew install --cask ngrok
-          brew install wget
-      - name: Configure Ngrok Authtoken
-        run: ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-      - name: Enable macOS Screen Sharing
-        run: |
-          sudo defaults write /Library/Preferences/com.apple.RemoteManagement VNCAlwaysStartOnConsole -bool true
-          sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvncpasswd -vncpasswd "Password123" -restart -agent -privs -all
-      - name: Start Ngrok Tunnel
-        run: |
-          ngrok tcp 5900 --log=stdout &
-          sleep 10
-      - name: Get Connection Details
-        run: |
-          curl --silent http://127.0.0 | grep -o 'tcp://[^"]*'
-          sleep 21600 # Keeps the Mac cloud alive for up to 6 hours
-
+      - name: Open Free Interactive Session
+        uses: mxschmitt/action-tmate@v3
